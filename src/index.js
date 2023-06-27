@@ -1,43 +1,34 @@
 import '../css/styles.css';
-import WeatherService from './weather-service.js'
-
+import ApiRequest from './Dino-game.js'
 
 // UI Logic
 
-function handleFormSubmission(event) {
-  event.preventDefault();
-  const city = document.querySelector('#location').value;
-  document.querySelector('#location').value = null;
-  let promise = WeatherService.getWeather(city);
-  promise.then(function (weatherDataArray) {
-    printElements(weatherDataArray);
-  }, function (errorArray) {
-    printError(errorArray);
-  });
-}
+ApiRequest.send()
+  .then(response => {
+    console.log(response);
+    useApiData(response);
+  })
+  .catch(error => console.log('Error:', error));
 
-function printElements(data) {
-  document.querySelector('#showResponse').innerText = `The humidity in ${data[1]} is ${data[0].main.humidity}%.
-  The temperature in Kelvins is ${data[0].main.temp} degrees.`;
-}
+// Fetch the data from API
+function useApiData(data) {
 
-function printError(error) {
-  document.querySelector('#showResponse').innerText = `There was an error accessing the weather data for ${error[2]}: ${error[0].status} ${error[0].statusText}: ${error[1].message}`;
-}
+  //Display general information about the question
+  document.querySelector('#category').innerHTML = `Category: ${data.results[0].category}`;
+  document.querySelector('#difficulty').innerHTML = `Difficulty: ${data.results[0].difficulty}`;
+  document.querySelector('#question').innerHTML = `Question: ${data.results[0].question}`;
 
-window.addEventListener("load", function () {
-  document.querySelector('form').addEventListener("submit", handleFormSubmission);
-});
+  //Display optional answers
+  document.querySelector('#answer1').innerHTML = `${data.results[0].correct_answer}`;
+  document.querySelector('#answer2').innerHTML = `${data.results[0].incorrect_answers[0]}`;
+  document.querySelector('#answer3').innerHTML = `${data.results[0].incorrect_answers[1]}`;
+  document.querySelector('#answer4').innerHTML = `${data.results[0].incorrect_answers[2]}`;
+};
 
-// function handleFormSubmission(event) {
-//   event.preventDefault();
+let correctAnswer = document.querySelector('#answer1')
 
-//   const city = document.querySelector('#city').value;
-//   const state = document.querySelector('#state').value;
-//   const country = document.querySelector('#country').value
+correctAnswer.addEventListener('click', () => {
+  //Show message 'you got 1 point
 
-//   document.querySelector('#city').value = null;
-//   document.querySelector('#state').value = null;
-//   document.querySelector('#country').value = null;
-//   getWeather(city, state, country);
-// }
+  //Generate a new trivia question
+})
